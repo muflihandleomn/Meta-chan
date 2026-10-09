@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Meta-chan — Your desktop companion</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="titlebar"><span class="titlebar-name">meta-chan <span>desktop</span></span><div class="window-actions"><button data-window="minimize" aria-label="Minimize">−</button><button data-window="maximize" aria-label="Maximize">□</button><button data-window="close" aria-label="Close window">×</button></div></div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" id="brand-home" aria-label="Meta-chan home"><span class="brand-symbol">∞</span><span>meta<span class="brand-light">chan</span><small>YOUR DESKTOP COMPANION</small></span></a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav aria-label="Main navigation">
+        <button class="nav-item active" data-tab="chat" aria-current="page"><span class="nav-icon">◌</span> Chat <span class="nav-dot"></span></button>
+        <button class="nav-item" data-tab="tasks"><span class="nav-icon">☑</span> Tasks <span class="nav-count" id="task-count">0</span></button>
+        <button class="nav-item" data-tab="memory"><span class="nav-icon">◇</span> Memory</button>
+        <button class="nav-item" data-tab="settings"><span class="nav-icon">⚙</span> Settings</button>
+      </nav>
+      <button class="companion-toggle" id="toggle-companion"><span>✧</span><strong>Desktop mode</strong><small>Take me with you ↗</small></button>
+      <div class="sidebar-bottom"><span class="privacy-icon">◈</span><div><strong>Made for your space.</strong><small>Chat & memory stay local.</small></div></div>
+      <div class="version">v0.1.0 <span>Independent project</span></div>
+    </aside>
+    <main class="main">
+      <header class="page-header"><div><p class="eyebrow" id="page-eyebrow">A LITTLE COMPANY. A LOT OF POSSIBILITY.</p><h1 id="page-title">Hey, I'm <span>Meta-chan.</span></h1></div><button class="connection-status" id="connection-status" title="Open model settings"><i></i><span>Checking model…</span></button></header>
+
+      <section id="pane-chat" class="pane chat-layout" aria-label="Chat">
+        <div class="character-card">
+          <div class="character-top"><span>YOUR AI COMPANION</span><span class="spark">✦</span></div>
+          <div class="character-stage"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="stage-glow"></div><img class="character" src="../assets/meta-chan.svg" alt="Meta-chan, a blue-haired anime companion in a white and blue jacket"><span class="floating-star star-one">✧</span><span class="floating-star star-two">+</span><span class="floating-star star-three">✦</span></div>
+          <div class="character-caption"><div class="character-state"><i></i><span id="character-state">LET'S GET YOU CONNECTED</span></div><h2>A familiar face.<br>A fresh perspective.</h2><p>Here to help you think, create,<br>and make a little progress.</p></div>
+          <div class="character-footer"><span>POWERED BY LLAMA</span><span>∞</span></div>
+        </div>
+        <div class="chat-card"><div class="chat-heading"><div class="mini-avatar">m<span>✦</span></div><div><strong>Meta-chan</strong><small id="chat-subtitle">Your space to think out loud</small></div><button class="icon-button" id="new-chat" title="Clear conversation" aria-label="Clear conversation">↻</button></div>
+          <div class="messages" id="messages" role="log" aria-label="Conversation" aria-live="polite" aria-relevant="additions"></div>
+          <div class="empty-chat" id="empty-chat"><span class="empty-symbol">✧</span><h2>What's on your mind?</h2><p>A big idea, a small question,<br>or a day that needs a plan. I'm here.</p><div class="suggestions"><button data-prompt="Help me plan my day. Ask me about my priorities first."><span>↗</span> Plan my day</button><button data-prompt="I want to understand something better. Ask me what topic I am learning."><span>✧</span> Explain something</button><button data-prompt="Help me with a coding project. Ask me what I am building and which language I use."><span>⌘</span> Help me code</button></div></div>
+          <div class="chat-error" id="chat-error" role="alert" hidden></div>
+          <form class="composer" id="chat-form"><label class="sr-only" for="message-input">Message Meta-chan</label><textarea id="message-input" rows="2" maxlength="16000" placeholder="Tell me what you're thinking…"></textarea><div class="composer-toolbar"><div><span class="local-dot"></span><span id="model-label">llama3.2:3b</span></div><button type="button" class="stop-button" id="stop-reply" hidden>■ Stop</button><button type="submit" id="send-message" class="send-button" aria-label="Send message">↑</button></div></form>
+          <div class="composer-note"><span>Enter to send · Shift + Enter for a new line</span><button id="voice-toggle" aria-label="Enable spoken replies" aria-pressed="false">Voice off</button></div>
+        </div>
+      </section>
+
+      <section id="pane-tasks" class="pane content-pane" aria-label="Tasks" hidden>
+        <div class="section-intro"><span class="section-kicker">ONE THING AT A TIME</span><h2>Make room for progress.</h2><p>Your open tasks give Meta-chan context when you ask for help planning.</p></div>
+        <form id="task-form" class="inline-form"><label class="sr-only" for="task-input">New task</label><input id="task-input" maxlength="180" placeholder="What's the next small step?" required><button class="primary-button" type="submit">Add task <span>+</span></button></form>
+        <div class="list-heading"><span>YOUR LIST</span><span id="task-summary">0 complete</span></div><div id="tasks-list" class="item-list"></div><div id="tasks-empty" class="list-empty"><span>☑</span><h3>A little breathing room.</h3><p>Add your first task above.</p></div>
+      </section>
+
+      <section id="pane-memory" class="pane content-pane" aria-label="Memory" hidden>
+        <div class="section-intro"><span class="section-kicker">THE LITTLE THINGS THAT MATTER</span><h2>A companion that knows your context.</h2><p>Save preferences, goals, or project details. These notes are included in future chats until you remove them.</p></div>
+        <form id="memory-form" class="memory-form"><label for="memory-input">Something to remember</label><textarea id="memory-input" maxlength="500" rows="3" placeholder="I prefer short answers. I'm building my first desktop app…" required></textarea><div><small>Saved only when you add it · Up to 30 notes</small><button class="primary-button" type="submit">Remember this <span>+</span></button></div></form>
+        <div class="list-heading"><span>SAVED MEMORIES</span><span id="memory-count">0 / 30</span></div><div id="memories-list" class="item-list memory-list"></div><div id="memories-empty" class="list-empty"><span>◇</span><h3>Start with something about you.</h3><p>You choose what stays.</p></div>
+      </section>
+
+      <section id="pane-settings" class="pane settings-pane" aria-label="Settings" hidden>
+        <div class="settings-columns"><div><form id="settings-form" class="settings-card"><div class="card-heading"><span>01</span><div><h2>Make yourself at home.</h2><p>A few small things, just for you.</p></div></div>
+          <label for="setting-name">What should I call you?</label><input id="setting-name" maxlength="60" placeholder="Your name (optional)">
+          <label for="setting-model">Llama model</label><input id="setting-model" maxlength="120" value="llama3.2:3b" list="installed-models" required><datalist id="installed-models"></datalist>
+          <label for="setting-endpoint">Local Ollama address</label><input id="setting-endpoint" value="http://127.0.0.1:11434" required><p class="field-note">Only loopback addresses are accepted. Prompts stay on this computer.</p>
+          <label class="toggle-row"><span><strong>Spoken replies</strong><small>Read completed answers aloud with your system voice.</small></span><input type="checkbox" id="setting-voice"></label>
+          <label class="toggle-row"><span><strong>Keep companion on top</strong><small>The floating character stays above other windows.</small></span><input type="checkbox" id="setting-top"></label>
+          <label class="toggle-row"><span><strong>Reduce motion</strong><small>Pause character and background animations.</small></span><input type="checkbox" id="setting-motion"></label>
+          <div class="settings-actions"><button class="primary-button" type="submit" id="save-settings">Save settings</button><button class="secondary-button" type="button" id="test-connection">Test connection</button></div><p class="connection-result" id="connection-result" role="status"></p>
+        </form></div>
+        <div><div class="setup-card"><span class="setup-mark">∞</span><span class="section-kicker">A BRAIN FOR YOUR COMPANION</span><h2>Meet your local AI.</h2><p>Install Ollama from <strong>ollama.com</strong>, open it, then run this command in your terminal:</p><code>ollama pull llama3.2:3b</code><p>Save your settings, then test the connection. A smaller model is a good place to start.</p><span class="setup-badge">No API key. No subscription.</span></div>
+          <div class="settings-card data-card"><h2>Your data, your call.</h2><p>Conversations, tasks, and notes are stored on this device as a local JSON file. They are not encrypted.</p><div class="data-actions"><button class="secondary-button" id="export-data">Export data ↗</button><button class="secondary-button" id="open-data">Open folder ↗</button><button class="danger-button" id="clear-data">Clear personal data</button></div></div>
+          <p class="independent-note">An independent fan project using Meta's Llama models. Not affiliated with or endorsed by Meta. No screen access or computer control.</p>
+        </div></div>
+      </section>
+      <footer class="page-footer"><span>A little more human. A little more helpful.</span><span>BUILT TO KEEP YOU COMPANY <span class="blue">✦</span></span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="confirm-dialog"><form method="dialog"><span class="section-kicker">A FRESH START</span><h2 id="confirm-title"></h2><p id="confirm-copy"></p><div class="dialog-actions"><button class="secondary-button" value="cancel">Keep it</button><button class="danger-button" value="confirm" id="confirm-action">Clear</button></div></form></dialog>
+</body>
+</html>
